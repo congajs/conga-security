@@ -38,8 +38,6 @@ describe("Kernel", () => {
 
     });
 
-
-
     it("should load the index route without problems", (done) => {
 
         request({
@@ -49,19 +47,52 @@ describe("Kernel", () => {
 
         }, (error, response, body) => {
 
-            console.log(body);
             expect(response.statusCode).toEqual(200);
-
-            // expect(body.data.attributes['title']).toEqual('Test Title');
-            // expect(body.data.attributes['body']).toEqual('This is a test article');
-            // expect(body.data.id).not.toBeUndefined();
-
+            expect(body).toEqual('{"foo":"bar"}');
 
             done();
         });
 
     });
 
+    it("should return an access denied error response for an in-memory firewall", (done) => {
 
+        request({
+
+            uri: 'http://localhost:5555/admin/secure',
+            method: 'GET'
+
+        }, (error, response, body) => {
+
+            expect(response.statusCode).toEqual(401);
+            expect(body).toEqual('{"status":401,"message":"Unauthorized"}');
+            done();
+
+        });
+
+    });
+
+
+    it("should return a success response when logging in via HTTP basic auth (plaintext) to an in-memory firewall", (done) => {
+
+        request({
+
+            uri: 'http://localhost:5555/admin/secure',
+            method: 'GET',
+            auth: {
+                user: 'bar',
+                pass: 'bar',
+                sendImmediately: true
+            }
+
+        }, (error, response, body) => {
+
+            expect(response.statusCode).toEqual(200);
+            expect(body).toEqual('{"message":"got in"}');
+            done();
+
+        });
+
+    });
 
 });

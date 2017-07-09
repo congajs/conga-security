@@ -2,6 +2,20 @@ security:
 
     encryption:
 
+        in_memory_user_not_encoded:
+            path: "@conga/framework-security:security/user/InMemoryUser"
+            algorithm: text
+            pepper:
+            salt:
+            encode_as_base64: false
+
+        # in_memory_user_encoded:
+        #     path: "@conga/framework-security:security/user/InMemoryUser"
+        #     algorithm: text
+        #     pepper: in-memory-pepper
+        #     salt: in-memory-salt
+        #     encode_as_base64: true
+
         # user:
         #     path: demo-bundle:model/user
         #     algorithm: sha512
@@ -20,18 +34,18 @@ security:
 
     firewall:
 
-        anonymous_access:
-            route: ^/
-            anonymous: true
+        # anonymous_access:
+        #     route: ^/
+        #     anonymous: true
 
         # simple_access_control:
         #     route: ^/my/route
         #     roles: ["ROLE_CUSTOM"]
         #     stateless: false
         #
-        im_memory_access:
+        in_memory_access:
             route: ^/admin
-            roles: ROLE_USER
+            roles: ROLE_ADMIN
             authenticator: http.authenticator
             provider: memory.provider
 
