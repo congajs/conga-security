@@ -36,6 +36,10 @@ security:
             
     
     firewall:
+    
+        anonymous_access:
+            route: ^/my/route/anonymous
+            anonymous: true
         
         simple_access_control:
             route: ^/my/route
