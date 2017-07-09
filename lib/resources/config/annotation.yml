@@ -1,0 +1,14 @@
+services:
+
+    # controller annotation handler #
+    security.annotation.controller.handler:
+        constructor: conga-security:annotation/handler/ControllerAnnotationHandler
+        tags:
+            - { name: controller.annotation.handler, method: handleAnnotations }
+
+    # bass annotation handler #
+    security.annotation.bass.handler:
+        constructor: conga-security:annotation/handler/BassAnnotationHandler
+        arguments: ['@security.encryption']
+        tags:
+            - { name: bass.annotation.handler }

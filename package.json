@@ -1,0 +1,27 @@
+{
+  "name": "conga-security",
+  "version": "0.0.1",
+  "description": "Conga.js security bundle",
+  "directories": {
+    "test": "test"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/congajs/conga-security.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Anthony Matarazzo",
+    "email": "email@anthonymatarazzo.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "conga-annotations": ">=1.0.0"
+  },
+  "devDependencies": {},
+  "readmeFilename": "README.md"
+}

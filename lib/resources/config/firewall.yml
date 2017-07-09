@@ -1,0 +1,35 @@
+services:
+
+    # event listener #
+    security.firewall.listener:
+        constructor: conga-security:listener/FirewallListener
+        tags:
+            - { name: kernel.event, event: kernel.compile, method: onKernelCompile, priority: 1.1 }
+            - { name: kernel.event, event: kernel.pre_controller, method: onPreController, priority: 1.1 }
+
+
+    # firewall service #
+    security.firewall:
+        constructor: conga-security:security/Firewall
+        arguments: ["@service_container"]
+
+
+
+    ### Authenticators ###
+
+    security.firewall.authenticator.http_basic:
+        constructor: conga-security:security/authenticator/HttpBasicAuthenticator
+
+
+
+    ### Providers ###
+
+    security.firewall.provider.factory:
+        constructor: conga-security:security/provider/ProviderFactory
+        arguments: ['@service_container']
+
+    security.firewall.provider.config:
+        constructor: conga-security:service/ProviderConfigService
+        arguments: ["@service_container"]
+        tags:
+            - { name: security.firewall.provider, priority: -1 }

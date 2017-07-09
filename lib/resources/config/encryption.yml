@@ -1,0 +1,47 @@
+services:
+
+    # event listener #
+    security.encryption.listener:
+        constructor: conga-security:listener/EncryptionListener
+        tags:
+            - { name: kernel.event, event: kernel.compile, method: onKernelCompile }
+
+
+
+    # encryption service #
+    security.encryption:
+        constructor: conga-security:service/EncryptionService
+        arguments: ["@service_container"]
+
+
+
+    ### encryption algorithms ###
+
+    security.encryption.plain_text:
+        constructor: conga-security:security/encryption/PlainTextEncryptor
+        tags:
+            - { name: security.encryptor, algorithm: text }
+
+    security.encryption.bcrypt:
+        constructor: conga-security:security/encryption/BcryptEncryptor
+        arguments: ["@bcrypt"]
+        tags:
+            - { name: security.encryptor, algorithm: bcrypt }
+
+    security.encryption.md5:
+        constructor: conga-security:security/encryption/CryptoHmacEncryptor
+        arguments: ["md5"]
+        tags:
+            - { name: security.encryptor, algorithm: md5 }
+
+    security.encryption.sha256:
+        constructor: conga-security:security/encryption/CryptoHmacEncryptor
+        arguments: ["sha256"]
+        tags:
+            - { name: security.encryptor, algorithm: sha256 }
+
+    security.encryption.sha512:
+        constructor: conga-security:security/encryption/CryptoHmacEncryptor
+        arguments: ["sha512"]
+        tags:
+            - { name: security.encryptor, algorithm: sha512 }

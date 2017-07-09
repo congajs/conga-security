@@ -1,0 +1,10 @@
+parameters:
+
+    security.context.class: conga-security:security/SecurityContext
+
+
+services:
+
+    security.context:
+        scope: request
+        constructor: "%security.context.class%"

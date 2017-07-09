@@ -1,0 +1,5 @@
+imports:
+    - { resource: annotation.yml }
+    - { resource: firewall.yml }
+    - { resource: encryption.yml }
+    - { resource: security.yml }
