@@ -1,0 +1,70 @@
+security:
+
+    encryption:
+
+        # user:
+        #     path: demo-bundle:model/user
+        #     algorithm: sha512
+        #     secret: asd8f6ja#*sJHGdfg234jkw@#$%erhg=!
+        #     encode_as_base64: true
+        #
+        # admin:
+        #     path: demo-bundle:model/admin
+        #     id: account_encryptor.service.id
+        #
+        # protected.data:
+        #     path: demo-bundle:model/protected-data
+        #     algorithm: bcrypt
+        #     saltRounds: 10
+        #
+
+    firewall:
+
+        anonymous_access:
+            route: ^/
+            anonymous: true
+
+        # simple_access_control:
+        #     route: ^/my/route
+        #     roles: ["ROLE_CUSTOM"]
+        #     stateless: false
+        #
+        im_memory_access:
+            route: ^/admin
+            roles: ROLE_USER
+            authenticator: http.authenticator
+            provider: memory.provider
+
+        # api_access_firewall:
+        #     route: ^/api
+        #     authenticator: api.authenticator
+        #     provider: api_client.provider
+        #     stateless: true
+        #
+    authenticators:
+
+        http.authenticator: '@security.firewall.authenticator.http_basic'
+
+        # api.authenticator: '@api.authenticator.service'
+
+    providers:
+
+        memory.provider:
+            memory:
+                users:
+                    foo:
+                        password: foo
+                        roles: ROLE_USER
+                    bar:
+                        password: bar
+                        roles: [ROLE_USER, ROLE_ADMIN]
+
+        # bass.provider:
+        #      bass:
+        #         document: demo-bundle:model/user    # the document path
+        #         login: email                        # the login / username field in the document
+        #         secret: password                    # the password field in the document
+        #
+        # api_client.provider: '@api_client.provider.service'
+        #
+        # chain.provider: ["memory.provider", "bass.provider"]

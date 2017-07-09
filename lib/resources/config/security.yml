@@ -1,6 +1,6 @@
 parameters:
 
-    security.context.class: conga-security:security/SecurityContext
+    security.context.class: "@conga/framework-security:security/SecurityContext"
 
 
 services:

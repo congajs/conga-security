@@ -1,0 +1,10 @@
+# bundles to enable
+bundles:
+
+    all:
+
+        # project bundles (from src/ directory)
+        - "demo-bundle"
+
+        # core conga bundles (from node_modules/ directory)
+        - "@conga/framework-security"

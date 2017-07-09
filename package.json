@@ -1,5 +1,5 @@
 {
-  "name": "conga-security",
+  "name": "@conga/framework-security",
   "version": "0.0.1",
   "description": "Conga.js security bundle",
   "directories": {
@@ -7,7 +7,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/*.js"
+    "test": "./node_modules/jasmine/bin/jasmine.js"
   },
   "repository": {
     "type": "git",
@@ -20,8 +20,13 @@
   },
   "license": "MIT",
   "dependencies": {
-    "conga-annotations": ">=1.0.0"
+    "@conga/annotations": ">=1.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@conga/framework": "^2.0.2-dev",
+    "jasmine": "^2.6.0",
+    "request": "^2.81.0",
+    "should": "^11.2.1"
+  },
   "readmeFilename": "README.md"
 }
