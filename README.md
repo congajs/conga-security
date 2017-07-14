@@ -262,7 +262,7 @@ sent up.
 
 Something like this may typically be used for API keys, where you send the API key on each request.
 
-Here are some simple examples encoding the same plain text string with different a nonce.
+Here are some simple examples encoding the same plain text string with a different nonce.
 
 ```
 const crypto = require('crypto');
