@@ -10,6 +10,7 @@
 module.exports = {
 
     AuthResource: require('./lib/security/AuthResource'),
+    AuthResourceProxy: require('./lib/security/AuthResourceProxy'),
 
     Authenticator: {
         AbstractAuthenticator: require('./lib/security/authenticator/AbstractAuthenticator')
