@@ -46,7 +46,7 @@ security:
             roles: ["ROLE_CUSTOM"]
             stateless: false
         
-        im_memory_access:
+        in_memory_access:
             route: ^/memory
             roles: ROLE_USER
             authenticator: http.authenticator
@@ -240,6 +240,65 @@ security:
                 foo: asdfasdf
                 bar: asdfasdf
     
+```
+
+#### Nonce Encoding Authentication
+
+All of the built-in providers allow you configure nonce encoding for your authentication scheme.  Nonce encoding allows 
+you to encode the plain-text password with a random / unique hash (the nonce), so that the password is not transferred 
+in plain text.
+
+The caveat to this method is that the password needs to be used as is, plain text, whether encrypted or not.  As such, it 
+makes sense to use this with the plain text encryptor.
+
+The encoding formula it uses is as follows:
+
+`md5(plain-text-password_nonce)_nonce`
+
+As you can see, the nonce is included in the MD5 hash, but it is also included in plain text at the end of the hash. 
+The server will use the nonce to check the MD5 hash against the plain-text password found in the persistence layer.  
+Basically, it creates the hash from the data in the persistence layer (the password), and compares it against what is 
+sent up.
+
+Something like this may typically be used for API keys, where you send the API key on each request.
+
+Here are some simple examples encoding the same plain text string with a different nonce.
+
+```
+const crypto = require('crypto');
+ 
+const password = 'my-password';
+ 
+let nonce = (new Date()).getTime() + Math.random();
+const encoded1 = crypto.createHash('md5').update(password + '_' + nonce).digest('hex') + '_' + nonce;
+ 
+nonce = crypto.createHash('sha1').update((new Date()).getTime() + Math.random().toString()).digest('hex');
+const encoded2 = crypto.createHash('md5').update(password + '_' + nonce).digest('hex') + '_' + nonce;
+ 
+console.log(encoded1);  // b4957437333164769e78f855276cedb7_1500065557537.2788
+console.log(encoded2);  // 268c9b1473490eb66f76716cbfb94abb_cd35e6bed3cf95f3c5b05e086d0fb73379565247
+```
+
+To use this configuration option, specify `nonce_encoded: true` in your provider configuration.
+
+```
+security:
+ 
+    encryption:
+        
+        # use the plain-text encryptor for nonce_encoding
+        api-client:
+            path: demo-bundle:model/ApiClient
+            algorithm: text
+ 
+    providers:
+    
+        bass.provider:
+             bass:
+                document: demo-bundle:model/ApiClient   # the document path
+                login: publicKey                        # the login / username field in the document
+                secret: secretKey                       # the password field in the document
+                nonce_encoded: true                     # use nonce-encoding
 ```
 
 encryption
