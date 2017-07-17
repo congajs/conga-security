@@ -3,7 +3,7 @@ const path = require('path');
 const request = require('request');
 const Kernel = require('@conga/framework/lib/kernel/TestKernel');
 
-describe("Kernel", () => {
+describe("@conga/framework-security", () => {
 
     let kernel;
 
@@ -55,7 +55,7 @@ describe("Kernel", () => {
 
     });
 
-    it("should return an access denied error response for an in-memory firewall", (done) => {
+    it("should return an access denied error response for an in-memory firewall with no auth", (done) => {
 
         request({
 
@@ -64,8 +64,32 @@ describe("Kernel", () => {
 
         }, (error, response, body) => {
 
+            const json = JSON.parse(body);
             expect(response.statusCode).toEqual(401);
-            expect(body).toEqual('{"status":401,"message":"Unauthorized"}');
+            expect(json.message).toEqual('Unauthorized');
+            done();
+
+        });
+
+    });
+
+    it("should return an access denied error response when logging in via HTTP basic auth (plaintext) to an in-memory firewall with invalid credentials", (done) => {
+
+        request({
+
+            uri: 'http://localhost:5555/admin/secure',
+            method: 'GET',
+            auth: {
+                user: 'access',
+                pass: 'denied',
+                sendImmediately: true
+            }
+
+        }, (error, response, body) => {
+
+            const json = JSON.parse(body);
+            expect(response.statusCode).toEqual(403);
+            expect(json.message).toEqual('Access Denied');
             done();
 
         });

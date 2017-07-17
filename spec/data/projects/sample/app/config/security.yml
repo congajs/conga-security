@@ -5,8 +5,6 @@ security:
         in_memory_user_not_encoded:
             path: "@conga/framework-security:security/user/InMemoryUser"
             algorithm: text
-            pepper:
-            salt:
             encode_as_base64: false
 
         # in_memory_user_encoded:
