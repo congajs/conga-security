@@ -1,0 +1,16 @@
+imports:
+    - { resource : config.yml }
+
+framework:
+
+    # application settings
+    app:
+
+        port:  5555
+
+    logger:
+
+        # log to console for development mode
+        default:
+            type: console
+            level: DEBUG

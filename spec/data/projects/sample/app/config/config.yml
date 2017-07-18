@@ -1,0 +1,44 @@
+# include other config files
+imports:
+    - { resource : parameters.ini }
+    - { resource : bundles.yml }
+    - { resource : security.yml }
+
+framework:
+
+    # application settings
+    app:
+        host: "%app.http.host%"
+        port: "%app.http.port%"
+
+# # bass odm
+# bass:
+#
+#     # the adapters
+#     adapters:
+#         - bass-nedb
+#
+#     # the db connections
+#     connections:
+#
+#         nedb.default:
+#             adapter:  bass-nedb
+#             directory: "%kernel.var_path%/data/nedb"
+#
+#     # the managers
+#     managers:
+#
+#         nedb.default:
+#             adapter:    bass-nedb
+#             connection: nedb.default
+#             documents:
+#                 - demo-bundle:model
+#
+# # rest serialization
+# rest:
+#
+#     attribute.inflection: snake
+#
+#     model:
+#         paths:
+#             - demo-bundle:model

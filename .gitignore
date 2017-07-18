@@ -5,5 +5,8 @@
 # node/npm
 node_modules
 npm-debug.log
+package-lock.json
 
 .DS_Store
+
+spec/data/projects/sample/var/*

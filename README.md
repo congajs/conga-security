@@ -46,7 +46,7 @@ security:
             roles: ["ROLE_CUSTOM"]
             stateless: false
         
-        im_memory_access:
+        in_memory_access:
             route: ^/memory
             roles: ROLE_USER
             authenticator: http.authenticator

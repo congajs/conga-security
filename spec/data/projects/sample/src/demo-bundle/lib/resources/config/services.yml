@@ -1,0 +1,10 @@
+parameters:
+
+    # demo.bundle.service.class: demo-bundle:service/DemoService
+
+services:
+
+    # demo.bundle.service:
+    #
+    #     constructor: "%demo.bundle.service.class%"
+    #     arguments: ['@service_container']
