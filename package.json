@@ -20,10 +20,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@conga/annotations": ">=1.0.0"
+    "@conga/annotations": "^1.0.0"
   },
   "devDependencies": {
-    "@conga/framework": "^2.0.3-dev",
+    "@conga/framework": "^2.0.0",
     "jasmine": "^2.6.0",
     "request": "^2.81.0",
     "should": "^11.2.1"
