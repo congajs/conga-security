@@ -271,12 +271,21 @@ const password = 'my-password';
  
 let nonce = (new Date()).getTime() + Math.random();
 const encoded1 = crypto.createHash('md5').update(password + '_' + nonce).digest('hex') + '_' + nonce;
- 
+  
 nonce = crypto.createHash('sha1').update((new Date()).getTime() + Math.random().toString()).digest('hex');
 const encoded2 = crypto.createHash('md5').update(password + '_' + nonce).digest('hex') + '_' + nonce;
  
 console.log(encoded1);  // b4957437333164769e78f855276cedb7_1500065557537.2788
 console.log(encoded2);  // 268c9b1473490eb66f76716cbfb94abb_cd35e6bed3cf95f3c5b05e086d0fb73379565247
+ 
+crypto.randomBytes(15, (err, buff) => {
+    if (err) {
+        throw err;
+    }
+    const nonce = buff.toString('hex');
+    const encoded = crypto.createHash('md5').update(password + '_' + nonce).digest('hex') + '_' + nonce;
+    console.log(encoded);   // f476de4d477466f07540788021f94c43_b5a4d025ffa02d0db7c2bdc97311a3
+});
 ```
 
 To use this configuration option, specify `nonce_encoded: true` in your provider configuration.
