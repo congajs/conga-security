@@ -10,15 +10,29 @@ services:
 
     # firewall service #
     security.firewall:
-        constructor: "@conga/framework-security:security/Firewall"
+        alias: firewall
+        constructor: "@conga/framework-security:security/firewall/Firewall"
+        arguments: ["@service_container"]
+
+    # firewall factory service #
+    security.firewall.factory:
+        alias: firewall.factory
+        constructor: "@conga/framework-security:security/firewall/FirewallFactory"
         arguments: ["@service_container"]
 
 
 
     ### Authenticators ###
 
+    security.firewall.authenticator.factory:
+        constructor: "@conga/framework-security:security/authenticator/AuthenticatorFactory"
+        arguments: ['@service_container']
+
     security.firewall.authenticator.http_basic:
         constructor: "@conga/framework-security:security/authenticator/HttpBasicAuthenticator"
+
+    security.firewall.authenticator.http_form:
+        constructor: "@conga/framework-security:security/authenticator/HttpFormAuthenticator"
 
 
 

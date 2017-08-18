@@ -1,13 +1,24 @@
 {
   "name": "@conga/framework-security",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Conga.js security bundle",
   "directories": {
     "test": "test"
   },
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/jasmine/bin/jasmine.js"
+    "test": "npm run test_all",
+    "test_all": "npm run test_provider && npm run test_auth",
+    "test_auth": "npm run test_auth_form",
+    "test_auth_form": "./node_modules/jasmine/bin/jasmine.js spec/firewall-spec/authenticators/Auth_Http_Form_Spec.js",
+    "test_provider": "npm run test_provider_all_memory && npm run test_provider_all_chain && npm run test_provider_bass_bcrypt",
+    "test_provider_all_memory": "npm run test_provider_memory_text && npm run test_provider_memory_text && npm run test_provider_memory_text_encoded && npm run test_provider_memory_bcrypt",
+    "test_provider_memory_text": "./node_modules/jasmine/bin/jasmine.js spec/firewall-spec/providers/InMemory_Text_Spec.js",
+    "test_provider_memory_text_encoded": "./node_modules/jasmine/bin/jasmine.js spec/firewall-spec/providers/InMemory_Text_Encoded_Spec.js",
+    "test_provider_memory_bcrypt": "./node_modules/jasmine/bin/jasmine.js spec/firewall-spec/providers/InMemory_Bcrypt_Spec.js",
+    "test_provider_all_chain": "npm run test_provider_chain_memory",
+    "test_provider_chain_memory": "./node_modules/jasmine/bin/jasmine.js spec/firewall-spec/providers/Chain_InMemory_Spec.js",
+    "test_provider_bass_bcrypt": "./node_modules/jasmine/bin/jasmine.js spec/firewall-spec/providers/Bass_Bcrypt_Spec.js"
   },
   "repository": {
     "type": "git",
@@ -20,10 +31,15 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@conga/annotations": "^1.0.0"
+    "@conga/annotations": "^1.0.0",
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "@conga/framework": "^2.0.0",
+    "@conga/framework": "congajs/conga-framework",
+    "@conga/framework-bass": "congajs/conga-bass#2.0.0-dev",
+    "@conga/framework-session": "^2.0.0",
+    "session-file-store": "^1.1.2",
+    "bass-nedb": "latest",
     "jasmine": "^2.6.0",
     "request": "^2.81.0",
     "should": "^11.2.1"

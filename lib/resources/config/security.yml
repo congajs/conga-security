@@ -5,6 +5,13 @@ parameters:
 
 services:
 
+    # the security context gives request scope access to the logged in user
     security.context:
         scope: request
         constructor: "%security.context.class%"
+
+    # session mixin for the @conga/framework-session bundle
+    security.session.mixin:
+        function: "@conga/framework-security:security/SessionMixin"
+        tags:
+            - { name: session.mixin, mixin: securityContext, priority: 9999999 }

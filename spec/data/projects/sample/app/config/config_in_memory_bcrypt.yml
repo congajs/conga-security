@@ -1,0 +1,32 @@
+imports:
+    - { resource : config_test.yml }
+
+security:
+
+    encryption:
+
+        in_memory_user:
+            path: "@conga/framework-security:security/user/InMemoryUser"
+            algorithm: bcrypt
+            saltRounds: 10
+            encode_as_base64: false
+
+    providers:
+
+        access.provider:
+            memory:
+                users:
+                    # u/p: foo/foo
+                    foo:
+                        password: $2a$10$99rw/Oy5Y25lRsDMToNO5.GkOammvoQUSe8SN42meL0wwiB8H4x.O
+                        roles: ROLE_USER
+
+                    # u/p: bar/bar
+                    bar:
+                        password: $2a$10$NQKocKRYV8uK.Rs7Z2je9.D2WIIZQbN0PifAvKPeXPIdxo8yXoI4i
+                        roles: [ROLE_FOO, ROLE_USER, ROLE_ADMIN, ROLE_BAR]
+
+                    # u/p: annotate/annotate
+                    annotate:
+                        password: $2a$10$aSabYow68OCA8EqxdrELjO5QE2q2ZDHpgQfomFD5GLduskpnJDJW.
+                        roles: ROLE_ANNOTATION

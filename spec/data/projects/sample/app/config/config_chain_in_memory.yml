@@ -1,0 +1,36 @@
+imports:
+    - { resource : config_test.yml }
+
+security:
+
+    encryption:
+
+        in_memory_user:
+            path: "@conga/framework-security:security/user/InMemoryUser"
+            algorithm: text
+            encode_as_base64: false
+
+    providers:
+
+        memory.user.provider:
+            memory:
+                users:
+                    foo:
+                        password: foo
+                        roles: ROLE_USER
+
+        memory.admin.provider:
+            memory:
+                users:
+                    bar:
+                        password: bar
+                        roles: [ROLE_FOO, ROLE_USER, ROLE_ADMIN, ROLE_BAR]
+
+        memory.annotate.provider:
+            memory:
+                users:
+                    annotate:
+                        password: annotate
+                        roles: ROLE_ANNOTATION
+
+        access.provider: [memory.admin.provider, memory.user.provider, memory.annotate.provider]

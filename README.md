@@ -57,6 +57,7 @@ security:
             authenticator: api.authenticator
             provider: api_client.provider
             stateless: true
+            secret: 'auth-token-encryption-key'
             
     authenticators:
     

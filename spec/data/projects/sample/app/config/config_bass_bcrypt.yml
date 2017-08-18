@@ -1,0 +1,51 @@
+imports:
+    - { resource : config_test.yml }
+
+bundles:
+
+    all:
+
+        # project bundles (from src/ directory)
+        - "demo-bundle"
+
+        # core conga bundles (from node_modules/ directory)
+        - "@conga/framework-security"
+        - "@conga/framework-bass"
+
+bass:
+
+  adapters:
+      - bass-nedb
+
+  connections:
+
+      user:
+          adapter: bass-nedb
+          #directory: "%kernel.var_path%/data/bass/users"
+
+  managers:
+
+      user:
+          adapter: bass-nedb
+          connection: user
+          documents:
+              session: demo-bundle:model/User.js
+
+security:
+
+    encryption:
+
+        user:
+            path: demo-bundle:model/User
+            algorithm: bcrypt
+            saltRounds: 20
+            salt: user-salt
+            pepper: user-pepper
+
+    providers:
+
+        access.provider:
+            bass:
+                document: demo-bundle:model/User.js
+                login: username
+                secret: password

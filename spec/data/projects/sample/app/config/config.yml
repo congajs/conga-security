@@ -11,34 +11,18 @@ framework:
         host: "%app.http.host%"
         port: "%app.http.port%"
 
-# # bass odm
-# bass:
-#
-#     # the adapters
-#     adapters:
-#         - bass-nedb
-#
-#     # the db connections
-#     connections:
-#
-#         nedb.default:
-#             adapter:  bass-nedb
-#             directory: "%kernel.var_path%/data/nedb"
-#
-#     # the managers
-#     managers:
-#
-#         nedb.default:
-#             adapter:    bass-nedb
-#             connection: nedb.default
-#             documents:
-#                 - demo-bundle:model
-#
-# # rest serialization
-# rest:
-#
-#     attribute.inflection: snake
-#
-#     model:
-#         paths:
-#             - demo-bundle:model
+# validation
+session:
+
+    name: super.awesome.cookie
+
+    cookie:
+
+    store:
+
+        module: session-file-store
+        options:
+            path: "%kernel.var_path%/sessions"
+            ttl: 7200
+            retries: 4
+            fileExtension: .session

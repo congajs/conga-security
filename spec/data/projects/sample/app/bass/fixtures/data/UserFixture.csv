@@ -1,0 +1,4 @@
+id,username,password,roles,first_name,last_name
+1,foo,foo,"[""ROLE_USER""]",Foo,User
+2,bar,bar,"[""ROLE_FOO"",""ROLE_USER"",""ROLE_ADMIN"",""ROLE_BAR""]",Bar,User
+3,annotate,annotate,"[""ROLE_ANNOTATION""]",Annotate,Testers

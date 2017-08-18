@@ -12,4 +12,11 @@ module.exports = class AdminController extends Controller {
         res.return({message: 'got in'});
     }
 
-}
+    /**
+     * @Route("/anonymous", methods=["GET"])
+     */
+    anonymous(req, res) {
+        res.return({message: 'hello mr anonymous'});
+    }
+
+};
