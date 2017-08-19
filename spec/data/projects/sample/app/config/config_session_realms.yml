@@ -1,0 +1,46 @@
+imports:
+    - { resource : config_test.yml }
+
+bundles:
+
+    all:
+
+        # project bundles (from src/ directory)
+        - "demo-bundle"
+
+        # core conga bundles (from node_modules/ directory)
+        - "@conga/framework-session"
+        - "@conga/framework-security"
+
+security:
+
+    encryption:
+
+        in_memory_user:
+            path: "@conga/framework-security:security/user/InMemoryUser"
+            algorithm: text
+
+    firewall:
+
+        session_realm_one:
+            stateless: false
+            route: ^/session/realm/session_realm_one
+            roles: ROLE_SESSION_REALM
+            provider: access.provider
+            authenticator: http.authenticator
+
+        session_realm_two:
+            stateless: false
+            route: ^/session/realm/session_realm_two
+            roles: ROLE_SESSION_REALM
+            provider: access.provider
+            authenticator: http.authenticator
+
+    providers:
+
+        access.provider:
+            memory:
+                users:
+                    foo:
+                        password: foo
+                        roles: ROLE_SESSION_REALM

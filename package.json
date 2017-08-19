@@ -8,9 +8,10 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run test_all",
-    "test_all": "npm run test_provider && npm run test_auth",
+    "test_all": "npm run test_provider && npm run test_auth && npm run test_session_realms",
     "test_auth": "npm run test_auth_form",
     "test_auth_form": "./node_modules/jasmine/bin/jasmine.js spec/firewall-spec/authenticators/Auth_Http_Form_Spec.js",
+    "test_session_realms": "./node_modules/jasmine/bin/jasmine.js spec/firewall-spec/SessionRealmsSpec.js",
     "test_provider": "npm run test_provider_all_memory && npm run test_provider_all_chain && npm run test_provider_bass_bcrypt",
     "test_provider_all_memory": "npm run test_provider_memory_text && npm run test_provider_memory_text && npm run test_provider_memory_text_encoded && npm run test_provider_memory_bcrypt",
     "test_provider_memory_text": "./node_modules/jasmine/bin/jasmine.js spec/firewall-spec/providers/InMemory_Text_Spec.js",
