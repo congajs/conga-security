@@ -3,7 +3,6 @@ const request = require('request');
 module.exports = () => {
 
     it("should load the index route", (done) => {
-
         request({
 
             uri: 'http://localhost:5555/',
@@ -16,8 +15,5 @@ module.exports = () => {
 
             done();
         });
-
     });
-
-
 };

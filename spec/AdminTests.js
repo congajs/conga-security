@@ -3,7 +3,6 @@ const request = require('request');
 module.exports = () => {
 
     it("should access denied without auth credentials", (done) => {
-
         request({
 
             uri: 'http://localhost:5555/admin/secure',
@@ -17,11 +16,9 @@ module.exports = () => {
             done();
 
         });
-
     });
 
     it("should access denied with invalid auth credentials", (done) => {
-
         request({
 
             uri: 'http://localhost:5555/admin/secure',
@@ -35,16 +32,14 @@ module.exports = () => {
         }, (error, response, body) => {
 
             const json = JSON.parse(body);
-            expect(response.statusCode).toEqual(403);
-            expect(json.message).toEqual('Access Denied');
+            expect(response.statusCode).toEqual(401);
+            expect(json.message).toEqual('Unauthorized');
             done();
 
         });
-
     });
 
     it("should access denied with valid auth credentials but insufficient roles", (done) => {
-
         request({
 
             uri: 'http://localhost:5555/annotation/secure',
@@ -63,12 +58,10 @@ module.exports = () => {
             done();
 
         });
-
     });
 
 
     it("should succeed with valid auth credentials", (done) => {
-
         request({
 
             uri: 'http://localhost:5555/admin/secure',
@@ -86,11 +79,9 @@ module.exports = () => {
             done();
 
         });
-
     });
 
     it("should succeed anonymous inside secured realm without auth credentials", done => {
-
         request({
             uri: "http://localhost:5555/admin/anonymous",
             method: 'GET'
@@ -101,7 +92,5 @@ module.exports = () => {
             done();
 
         });
-
     });
-
 };

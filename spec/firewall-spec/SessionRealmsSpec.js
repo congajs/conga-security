@@ -9,7 +9,43 @@ const appPath = path.join(rootPath, 'spec', 'data', 'projects', 'sample');
 
 describe('@conga/framework-security; firewall; session realms;', () => {
 
-    let kernel;
+    let kernel, Cookie;
+
+    const cookieCheck = response => {
+        if (response.headers instanceof Object && 'set-cookie' in response.headers) {
+            Cookie = response.headers['set-cookie'];
+        }
+    };
+
+    const getHeaders = () => {
+        if (Cookie) {
+            return {Cookie};
+        }
+        return {};
+    };
+
+    const clearCookie = () => { Cookie = null; };
+
+    const checkRealmResponse = (realm, response, body) => {
+        const json = JSON.parse(body);
+
+        expect(response.statusCode).toEqual(200);
+
+        expect(json).toEqual(jasmine.objectContaining({
+            realm: realm,
+            requestRealm: realm,
+            sessionValue: 'The session realm is ' + realm,
+            globalValue: 'Hi! I am a global variable!'
+        }));
+
+        expect(json.keys).toEqual(jasmine.arrayContaining(
+            ['session_realm', 'session_global']));
+
+        expect(json.data).toEqual(jasmine.objectContaining({
+            session_realm: 'The session realm is ' + realm,
+            session_global: 'Hi! I am a global variable!'
+        }));
+    };
 
     beforeAll((done) => {
 
@@ -40,232 +76,249 @@ describe('@conga/framework-security; firewall; session realms;', () => {
 
     });
 
-    describe('data isolation;', () => {
+    describe('session;', () => {
 
-        let Cookie;
 
-        const cookieCheck = response => {
-            if (response.headers instanceof Object && 'set-cookie' in response.headers) {
-                Cookie = response.headers['set-cookie'];
-            }
-        };
+        describe('shared;', () => {
 
-        const getHeaders = () => {
-            if (Cookie) {
-                return { Cookie };
-            }
-            return {};
-        };
+            describe('data isolation;', () => {
 
-        it("should set and return data in security realm one", (done) => {
+                beforeAll(done => {
+                    clearCookie();
+                    done();
+                });
 
-            request({
+                it("should set and return data in security realm one", (done) => {
+                    request({
 
-                uri: 'http://localhost:5555/session/realm/session_realm_one/set',
-                method: 'GET',
-                auth: {
-                    user: 'foo',
-                    pass: 'foo',
-                    sendImmediately: true
-                },
-                headers: getHeaders()
+                        uri: 'http://localhost:5555/session/realm/session_realm_one/set',
+                        method: 'GET',
+                        auth: {
+                            user: 'foo',
+                            pass: 'foo',
+                            sendImmediately: true
+                        }
+                        // no headers!  this is the first auth
 
-            }, (error, response, body) => {
+                    }, (error, response, body) => {
 
-                cookieCheck(response);
+                        cookieCheck(response);
 
-                const json = JSON.parse(body);
+                        checkRealmResponse('session_realm_one', response, body);
+                        done();
+                    });
+                });
 
-                expect(response.statusCode).toEqual(200);
+                it("should set and return data in security realm two", done => {
+                    request({
 
-                expect(json).toEqual(jasmine.objectContaining({
-                    realm: 'session_realm_one',
-                    requestRealm: 'session_realm_one',
-                    sessionValue: 'The session realm is session_realm_one',
-                    globalValue: 'Hi! I am a global variable!'
-                }));
+                        uri: 'http://localhost:5555/session/realm/session_realm_two/set',
+                        method: 'GET',
 
-                expect(json.keys).toEqual(jasmine.arrayContaining([
-                    'session_realm', 'session_global']));
+                        // session data is saved together with previous cookie's session-id
+                        headers: getHeaders()
 
-                expect(json.data).toEqual(jasmine.objectContaining({
-                    session_realm: 'The session realm is session_realm_one',
-                    session_global: 'Hi! I am a global variable!'
-                }));
+                    }, (error, response, body) => {
 
-                done();
+                        cookieCheck(response);
 
+                        checkRealmResponse('session_realm_two', response, body);
+                        done();
+                    });
+                });
+
+                it("should only get data from security realm one", done => {
+                    request({
+
+                        uri: 'http://localhost:5555/session/realm/session_realm_one/get',
+                        method: 'GET',
+
+                        // session data is saved together with previous cookie's session-id
+                        headers: getHeaders()
+
+                    }, (error, response, body) => {
+
+                        cookieCheck(response);
+
+                        checkRealmResponse('session_realm_one', response, body);
+                        done();
+                    });
+                });
+
+                it('should only get data from security realm two', done => {
+                    request({
+
+                        uri: 'http://localhost:5555/session/realm/session_realm_two/get',
+                        method: 'GET',
+
+                        // session data is saved together with previous cookie's session-id
+                        headers: getHeaders()
+
+                    }, (error, response, body) => {
+
+                        cookieCheck(response);
+
+                        checkRealmResponse('session_realm_two', response, body);
+                        done();
+                    });
+                });
+
+                it('should not share data between sessions', done => {
+
+                    request({
+
+                        uri: 'http://localhost:5555/session/realm/session_realm_two/get',
+                        method: 'GET',
+                        auth: {
+                            user: 'foo',
+                            pass: 'foo',
+                            sendImmediately: true
+                        }
+                        // no headers!
+
+                    }, (error, response, body) => {
+
+                        // no cookie check!
+
+                        const json = JSON.parse(body);
+
+                        expect(response.statusCode).toEqual(200);
+
+                        expect(json).toEqual(jasmine.objectContaining({
+                            realm: 'session_realm_two',
+                            requestRealm: 'session_realm_two'
+                        }));
+
+                        expect(json).not.toEqual(jasmine.objectContaining({
+                            sessionValue: 'The session realm is session_realm_two',
+                            globalValue: 'Hi! I am a global variable!'
+                        }));
+
+                        expect(json.keys).not.toEqual(jasmine.arrayContaining(
+                            ['session_realm', 'session_global']));
+
+                        expect(json.data).not.toEqual(jasmine.objectContaining({
+                            session_realm: 'The session realm is session_realm_two',
+                            session_global: 'Hi! I am a global variable!'
+                        }));
+
+                        done();
+                    });
+                });
             });
-
         });
 
-        it("should set and return data in security realm two", done => {
 
-            request({
+        describe('not shared;', () => {
 
-                uri: 'http://localhost:5555/session/realm/session_realm_two/set',
-                method: 'GET',
-                auth: {
-                    user: 'foo',
-                    pass: 'foo',
-                    sendImmediately: true
-                },
-                headers: getHeaders()
-
-            }, (error, response, body) => {
-
-                cookieCheck(response);
-
-                const json = JSON.parse(body);
-
-                expect(response.statusCode).toEqual(200);
-
-                expect(json).toEqual(jasmine.objectContaining({
-                    realm: 'session_realm_two',
-                    requestRealm: 'session_realm_two',
-                    sessionValue: 'The session realm is session_realm_two',
-                    globalValue: 'Hi! I am a global variable!'
-                }));
-
-                expect(json.keys).toEqual(jasmine.arrayContaining([
-                    'session_realm', 'session_global']));
-
-                expect(json.data).toEqual(jasmine.objectContaining({
-                    session_realm: 'The session realm is session_realm_two',
-                    session_global: 'Hi! I am a global variable!'
-                }));
-
+            beforeAll(done => {
+                clearCookie();
                 done();
-
             });
 
-        });
+            it('should set and return data for realm three', done => {
+                request({
 
-        it("should only get data from security realm one", done => {
+                    uri: 'http://localhost:5555/session/realm/session_realm_three/set',
+                    method: 'GET',
+                    auth: {
+                        user: 'foo',
+                        pass: 'foo',
+                        sendImmediately: true
+                    }
 
-            request({
+                }, (error, response, body) => {
 
-                uri: 'http://localhost:5555/session/realm/session_realm_one/get',
-                method: 'GET',
-                auth: {
-                    user: 'foo',
-                    pass: 'foo',
-                    sendImmediately: true
-                },
-                headers: getHeaders()
-            }, (error, response, body) => {
+                    cookieCheck(response);
+                    expect(Cookie).toBeTruthy();
 
-                cookieCheck(response);
-
-                const json = JSON.parse(body);
-
-                expect(response.statusCode).toEqual(200);
-
-                expect(json).toEqual(jasmine.objectContaining({
-                    realm: 'session_realm_one',
-                    requestRealm: 'session_realm_one',
-                    sessionValue: 'The session realm is session_realm_one',
-                    globalValue: 'Hi! I am a global variable!'
-                }));
-
-                expect(json.keys).toEqual(jasmine.arrayContaining([
-                    'session_realm', 'session_global']));
-
-                expect(json.data).toEqual(jasmine.objectContaining({
-                    session_realm: 'The session realm is session_realm_one',
-                    session_global: 'Hi! I am a global variable!'
-                }));
-
-                done();
-
+                    checkRealmResponse('session_realm_three', response, body);
+                    done();
+                });
             });
 
-        });
+            it('should return data for realm three using cookie', done => {
+                request({
 
-        it('should only get data from security realm two', done => {
+                    uri: 'http://localhost:5555/session/realm/session_realm_three/set',
+                    method: 'GET',
+                    headers: getHeaders()
 
-            request({
+                }, (error, response, body) => {
 
-                uri: 'http://localhost:5555/session/realm/session_realm_two/get',
-                method: 'GET',
-                auth: {
-                    user: 'foo',
-                    pass: 'foo',
-                    sendImmediately: true
-                },
-                headers: getHeaders()
-            }, (error, response, body) => {
-
-                cookieCheck(response);
-
-                const json = JSON.parse(body);
-
-                expect(response.statusCode).toEqual(200);
-
-                expect(json).toEqual(jasmine.objectContaining({
-                    realm: 'session_realm_two',
-                    requestRealm: 'session_realm_two',
-                    sessionValue: 'The session realm is session_realm_two',
-                    globalValue: 'Hi! I am a global variable!'
-                }));
-
-                expect(json.keys).toEqual(jasmine.arrayContaining([
-                    'session_realm', 'session_global']));
-
-                expect(json.data).toEqual(jasmine.objectContaining({
-                    session_realm: 'The session realm is session_realm_two',
-                    session_global: 'Hi! I am a global variable!'
-                }));
-
-                done();
-
+                    checkRealmResponse('session_realm_three', response, body);
+                    done();
+                });
             });
 
-        });
+            it('should not allow access to realm four with cookie from realm three', done => {
+                request({
 
-        it('should not share data between sessions', done => {
+                    uri: 'http://localhost:5555/session/realm/session_realm_four/get',
+                    method: 'GET',
+                    headers: getHeaders()
 
-            request({
+                }, (error, response, body) => {
 
-                uri: 'http://localhost:5555/session/realm/session_realm_two/get',
-                method: 'GET',
-                auth: {
-                    user: 'foo',
-                    pass: 'foo',
-                    sendImmediately: true
-                }
-                // no headers!
-
-            }, (error, response, body) => {
-
-                // no cookie check!
-
-                const json = JSON.parse(body);
-
-                expect(response.statusCode).toEqual(200);
-
-                expect(json).toEqual(jasmine.objectContaining({
-                    realm: 'session_realm_two',
-                    requestRealm: 'session_realm_two'
-                }));
-
-                expect(json).not.toEqual(jasmine.objectContaining({
-                    sessionValue: 'The session realm is session_realm_two',
-                    globalValue: 'Hi! I am a global variable!'
-                }));
-
-                expect(json.keys).not.toEqual(jasmine.arrayContaining([
-                    'session_realm', 'session_global']));
-
-                expect(json.data).not.toEqual(jasmine.objectContaining({
-                    session_realm: 'The session realm is session_realm_two',
-                    session_global: 'Hi! I am a global variable!'
-                }));
-
-                done();
-
+                    const json = JSON.parse(body);
+                    expect(response.statusCode).toEqual(401);
+                    expect(json).toEqual(jasmine.objectContaining({message: 'Unauthorized'}));
+                    done();
+                });
             });
 
+            it('should set and return data for realm four', done => {
+                request({
+
+                    uri: 'http://localhost:5555/session/realm/session_realm_four/set',
+                    method: 'GET',
+                    auth: {
+                        user: 'foo',
+                        pass: 'foo',
+                        sendImmediately: true
+                    }
+
+                }, (error, response, body) => {
+
+                    clearCookie();
+
+                    cookieCheck(response);
+                    expect(Cookie).toBeTruthy();
+
+                    checkRealmResponse('session_realm_four', response, body);
+                    done();
+                });
+            });
+
+            it('should return data for realm four using cookie', done => {
+                request({
+
+                    uri: 'http://localhost:5555/session/realm/session_realm_four/set',
+                    method: 'GET',
+                    headers: getHeaders()
+
+                }, (error, response, body) => {
+
+                    checkRealmResponse('session_realm_four', response, body);
+                    done();
+                });
+            });
+
+            it('should not allow access to realm three with cookie from realm four', done => {
+                request({
+
+                    uri: 'http://localhost:5555/session/realm/session_realm_three/get',
+                    method: 'GET',
+                    headers: getHeaders()
+
+                }, (error, response, body) => {
+
+                    const json = JSON.parse(body);
+                    expect(response.statusCode).toEqual(401);
+                    expect(json).toEqual(jasmine.objectContaining({message: 'Unauthorized'}));
+                    done();
+                });
+            });
         });
 
 

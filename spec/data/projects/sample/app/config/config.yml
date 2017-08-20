@@ -14,15 +14,15 @@ framework:
 # validation
 session:
 
-    name: super.awesome.cookie
+    name: conga-security:spec
 
     cookie:
 
-    store:
-
-        module: session-file-store
-        options:
-            path: "%kernel.var_path%/sessions"
-            ttl: 7200
-            retries: 4
-            fileExtension: .session
+#    store:
+#
+#        module: session-file-store
+#        options:
+#            path: "%kernel.var_path%/sessions"
+#            ttl: 7200
+#            retries: 4
+#            fileExtension: .session

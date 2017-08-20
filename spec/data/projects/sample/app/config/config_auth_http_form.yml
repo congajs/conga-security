@@ -27,14 +27,21 @@ security:
             roles: ROLE_HTTP_FORM
             provider: access.provider
             stateless: false
+            encryption:
+                algorithm: 'bf-ecb'  # blowfish
+                salt: token-encrypt-salt
+            routes:
+                logout:
+                    path: /auth/http-form/logout
+                    target: /auth/http-form/login
+                redirect: /auth/http-form/denied
             authenticator:
                 service: '@security.firewall.authenticator.http_form'
                 options:
                     view_route: /auth/http-form/login
                     action_route: /auth/http-form/_login
-                    logout_route: /auth/http-form/logout
-                    success_redirect: /auth/http-form/access-granted
-                    redirect: /auth/http-form/denied
+                    action_failed_route: /auth/http-form/login/failed
+                    success_redirect_route: /auth/http-form/access-granted
                     login_field: username
                     secret_field: password
 

@@ -28,10 +28,28 @@ security:
             roles: ROLE_SESSION_REALM
             provider: access.provider
             authenticator: http.authenticator
+            shared: true
 
         session_realm_two:
             stateless: false
             route: ^/session/realm/session_realm_two
+            roles: ROLE_SESSION_REALM
+            provider: access.provider
+            authenticator: http.authenticator
+            shared:
+                - session_realm_one
+
+        session_realm_three:
+            stateless: false
+            route: ^/session/realm/session_realm_three
+            roles: ROLE_SESSION_REALM
+            provider: access.provider
+            authenticator: http.authenticator
+            shared: false
+
+        session_realm_four:
+            stateless: false
+            route: ^/session/realm/session_realm_four
             roles: ROLE_SESSION_REALM
             provider: access.provider
             authenticator: http.authenticator
