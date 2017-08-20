@@ -42,8 +42,6 @@ describe('@conga/framework-security; firewall; authenticator;', () => {
 
         describe('single functionality test;', () => {
 
-            return;
-
             it('should redirect to denied without credentials', done => {
                 request({
 
