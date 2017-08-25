@@ -29,6 +29,10 @@ security:
             provider: access.provider
             authenticator: http.authenticator
             shared: true
+            routes:
+                logout:
+                    path: /session/realm/session_realm_one/logout
+                    target: /session/realm/session_realm_one/set
 
         session_realm_two:
             stateless: false
@@ -54,6 +58,18 @@ security:
             provider: access.provider
             authenticator: http.authenticator
 
+        session_realm_five:
+            stateless: false
+            route: ^/session/realm/session_realm_five
+            roles: [ROLE_SESSION_REALM, ROLE_SESSION_REALM_FIVE]
+            provider: access.provider
+            authenticator: http.authenticator
+            shared: true
+            routes:
+                logout:
+                    path: /session/realm/session_realm_five/logout
+                    target: /session/realm/session_realm_five/get
+
     providers:
 
         access.provider:
@@ -62,3 +78,7 @@ security:
                     foo:
                         password: foo
                         roles: ROLE_SESSION_REALM
+
+                    bar:
+                        password: bar
+                        roles: [ROLE_SESSION_REALM, ROLE_SESSION_REALM_FIVE]

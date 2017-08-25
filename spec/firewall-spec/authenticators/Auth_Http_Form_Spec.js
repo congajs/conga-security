@@ -10,7 +10,7 @@ const modulePath = path.join(rootPath, 'node_modules');
 const appPath = path.join(rootPath, 'spec', 'data', 'projects', 'sample');
 
 process.on('unhandledRejection', (reason, p) => {
-    console.error(p, reason);
+    console.error('unhandled rejection', reason);
 });
 
 describe('@conga/framework-security; firewall; authenticator;', () => {
