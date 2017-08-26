@@ -1,4 +1,4 @@
-conga-security
+conga-security [![Build Status](https://secure.travis-ci.org/congajs/conga-security.png)](http://travis-ci.org/congajs/conga-security)
 ==============
 
 
