@@ -36,8 +36,8 @@
     "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "@conga/framework": "congajs/conga-framework",
-    "@conga/framework-bass": "congajs/conga-bass#2.0.0-dev",
+    "@conga/framework": "^2.0.0",
+    "@conga/framework-bass": "^2.0.0",
     "@conga/framework-session": "^2.0.0",
     "session-file-store": "^1.1.2",
     "bass-nedb": "latest",
