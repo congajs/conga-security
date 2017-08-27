@@ -11,12 +11,14 @@ services:
     # firewall service #
     security.firewall:
         alias: firewall
+        scope: request
         constructor: "@conga/framework-security:security/firewall/Firewall"
         arguments: ["@service_container"]
 
     # firewall factory service #
     security.firewall.factory:
         alias: firewall.factory
+        scope: request
         constructor: "@conga/framework-security:security/firewall/FirewallFactory"
         arguments: ["@service_container"]
 
@@ -25,6 +27,7 @@ services:
     ### Authenticators ###
 
     security.firewall.authenticator.factory:
+        scope: request
         constructor: "@conga/framework-security:security/authenticator/AuthenticatorFactory"
         arguments: ['@service_container']
 
@@ -39,10 +42,12 @@ services:
     ### Providers ###
 
     security.firewall.provider.factory:
+        scope: request
         constructor: "@conga/framework-security:security/provider/ProviderFactory"
         arguments: ['@service_container']
 
     security.firewall.provider.config:
+        scope: request
         constructor: "@conga/framework-security:service/ProviderConfigService"
         arguments: ["@service_container"]
         tags:
