@@ -13,7 +13,9 @@ module.exports = {
     AuthResourceProxy: require('./lib/security/resource/AuthResourceProxy'),
 
     Authenticator: {
-        AbstractAuthenticator: require('./lib/security/authenticator/AbstractAuthenticator')
+        AbstractAuthenticator: require('./lib/security/authenticator/AbstractAuthenticator'),
+        HttpBasicAuthenticator: require('./lib/security/authenticator/HttpBasicAuthenticator'),
+        HttpFormAuthenticator: require('./lib/security/authenticator/HttpFormAuthenticator')
     },
 
     Encryption: {
@@ -31,7 +33,8 @@ module.exports = {
 
     Provider: {
         AbstractProvider: require('./lib/security/provider/AbstractProvider'),
-        AbstractProviderConfig: require('./lib/security/provider/AbstractProviderConfig')
+        AbstractProviderConfig: require('./lib/security/provider/AbstractProviderConfig'),
+        BassProvider: require('./lib/security/provider/BassProvider')
     },
 
     Token: {
