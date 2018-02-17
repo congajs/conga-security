@@ -1,6 +1,6 @@
 {
   "name": "@conga/framework-security",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "description": "Conga.js security bundle",
   "directories": {
     "test": "test"
