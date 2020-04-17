@@ -1,5 +1,11 @@
 services:
 
+    # bcrypt module
+    bcrypt:
+        constructor: bcrypt
+
+
+
     # event listener #
     security.encryption.listener:
         constructor: "@conga/framework-security:listener/EncryptionListener"
