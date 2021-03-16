@@ -1,6 +1,6 @@
 {
   "name": "@conga/framework-security",
-  "version": "2.0.15",
+  "version": "2.1.0",
   "description": "Conga.js security bundle",
   "directories": {
     "test": "test"
@@ -32,18 +32,18 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@conga/annotations": "~1.0.0",
-    "lodash": "^4.17.4",
-    "bcrypt": "^4.0.1"
+    "@conga/annotations": "~1.0.4",
+    "bcrypt": "^5.0.1",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@conga/framework": "~2.0.0",
+    "@conga/framework": "~2.1.1",
     "@conga/framework-bass": "~2.0.0",
-    "@conga/framework-session": "~2.0.0",
+    "@conga/framework-session": "~2.1.0",
     "session-file-store": "^1.1.2",
     "bass-nedb": "latest",
-    "jasmine": "^2.6.0",
-    "request": "^2.81.0",
+    "jasmine": "^3.6.4",
+    "request": "^2.88.2",
     "should": "^11.2.1"
   },
   "readmeFilename": "README.md"
